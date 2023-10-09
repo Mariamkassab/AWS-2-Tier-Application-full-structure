@@ -14,12 +14,11 @@ subnet_name    = ["pub_sub1_az1", "private_sub1_az1", "private_sub2_az2", "pub_s
 # nat
 nat_name         = "nat_gateway"
 
-# ec2 security group
-ec2-ssh-cidr = ["10.0.2.0/24", "10.0.1.0/24"] 
-ec2-rds-cidr = ["10.0.1.0/24", "10.0.2.0/24"]
-
-#lb ce\security group
+#lb security group
 lb-ec2-cidr = ["10.0.2.0/24" , "10.0.1.0/24"]
+
+#endpoint security group
+endpoint-ssh-cidr = ["10.0.2.0/24", "10.0.1.0/24"] 
 
 # route tables 
 pub-wanted-cidr = "0.0.0.0/0"

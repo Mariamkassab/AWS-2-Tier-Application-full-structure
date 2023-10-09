@@ -34,18 +34,13 @@ variable "nat_name" {
   type = string
 }
 
-
-# ec2 security group
-variable "ec2-ssh-cidr" {
-  type = list
-}
-variable "ec2-rds-cidr" {
-  type = list
-}
-
-
 # lb security groupe
 variable "lb-ec2-cidr" {
+  type = list
+}
+
+# endpoint security group
+variable "endpoint-ssh-cidr" {
   type = list
 }
 

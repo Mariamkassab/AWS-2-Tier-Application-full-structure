@@ -27,8 +27,8 @@ module "ec2_security_group" {
     ssh = {
       port        = 22
       protocol    = "tcp"
-      cidr_blocks = var.ec2-ssh-cidr 
-      security_group = []
+      cidr_blocks = []
+      security_group = [module.endpoint_security_group.sg_id]
     },
     lb = {
       port        = 80
@@ -39,17 +39,11 @@ module "ec2_security_group" {
   }
 
   egress_rules = { 
-    rds = {
-      port        = 3306
-      protocol    = "tcp"
-      cidr_blocks = var.ec2-rds-cidr  
+    all = {
+      port        = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
       security_group = []
-    },
-    lb = {
-      port        = 80
-      protocol    = "tcp"
-      cidr_blocks = [] 
-      security_group = [module.lb_security_group.sg_id]
     }
   }
 
@@ -72,7 +66,7 @@ module "rds_security_group" {
   }
 
   egress_rules = {
-      no-rules = {
+    no-rules = {
       port        = 0
       protocol    = ""
       cidr_blocks = []
@@ -109,6 +103,33 @@ module "lb_security_group" {
   sc_g_name = "lb_security_group"
 }
 
+
+module "endpoint_security_group" {
+  source         = "./modules/security-group"
+  created_vpc_id = module.terraform_vpc.vpc_id
+
+  ingress_rules = {
+    no-rules = {
+      port        = 0
+      protocol    = ""
+      cidr_blocks = []   # my public ip
+      security_group = [] 
+    }
+  }
+
+  egress_rules = {
+    ec2 = {
+      port        = 22
+      protocol    = "tcp"
+      cidr_blocks = var.endpoint-ssh-cidr
+      security_group = []
+
+    }
+  }
+
+  sc_g_name = "endpoint_security_group"
+}
+
 module "public_routing_table" {
   source         = "./modules/route_table"
   created_vpc_id = module.terraform_vpc.vpc_id
@@ -135,7 +156,7 @@ module "lbs_creation" {
   lb_name = var.lb_name
   internal_or = var.internal_or
   lb_type = var.lb_type
-  lb_sg = [module.lb_security_group.sg_id ]  #################
+  lb_sg = [module.lb_security_group.sg_id ]  
   pub_subnets = [module.terraform_subnet.first_pub_id , module.terraform_subnet.second_pub_id ] 
   lb_env = var.lb_env
   tg_name = var.tg_name
@@ -166,41 +187,43 @@ module "auto_scaling_group" {
 }
 
 
-module "mysql-rds" {
-  source = "./modules/RDS"
-  engine-name = var.engine-name
-  db-name = var.db-name
-  storage = var.storage
-  engine-v = var.engine-v
-  instance-type = var.instance-type
-  user = var.user
-  pass = var.pass 
-  subnet-vpc-id = [ module.terraform_subnet.second_pri_id , module.terraform_subnet.first_pri_id ]
-  skip-final-db-snapshot = var.skip-final-db-snapshot
-  db-security-group = module.rds_security_group.sg_id
-  max_allocated_storage-autoscalling = var.max_allocated_storage-autoscalling
-  monitoring_interval = var.monitoring_interval
- maintenance_window = var.maintenance_window 
- backup_window = var.backup_window
- backup_retention_period = var.backup_retention_period
-}
-
-module "WAF" {
-  source = "./modules/waf"
-  aws_lb_arn = module.lbs_creation.lb_arn
-}
-
-# module "ec2-endpoint-az1" {
-#   source = "./modules/ec2_endpoint"
-#   sub-id = module.terraform_subnet.first_pri_id # first private subnet
+# module "mysql-rds" {
+#   source = "./modules/RDS"
+#   engine-name = var.engine-name
+#   db-name = var.db-name
+#   storage = var.storage
+#   engine-v = var.engine-v
+#   instance-type = var.instance-type
+#   user = var.user
+#   pass = var.pass 
+#   subnet-vpc-id = [ module.terraform_subnet.second_pri_id , module.terraform_subnet.first_pri_id ]
+#   skip-final-db-snapshot = var.skip-final-db-snapshot
+#   db-security-group = module.rds_security_group.sg_id
+#   max_allocated_storage-autoscalling = var.max_allocated_storage-autoscalling
+#   monitoring_interval = var.monitoring_interval
+#   maintenance_window = var.maintenance_window 
+#   backup_window = var.backup_window
+#   backup_retention_period = var.backup_retention_period
 # }
+
+# module "WAF" {
+#   source = "./modules/waf"
+#   aws_lb_arn = module.lbs_creation.lb_arn
+# }
+
+module "ec2-endpoint-az1" {
+  source = "./modules/ec2_endpoint"
+  sub-id = module.terraform_subnet.first_pri_id # first private subnet
+  endpoint-security-group = [module.endpoint_security_group.sg_id]
+}
 # module "ec2-endpoint-az2" {
 #   source = "./modules/ec2_endpoint"
 #   sub-id = module.terraform_subnet.second_pri_id   # second private subnet
+#   endpoint-security-group = [module.endpoint_security_group.sg_id]
 # }
 
-module "cloudtrail-logs" {
-  source = "./modules/cloudtrail"
-}
+# module "cloudtrail-logs" {
+#   source = "./modules/cloudtrail"
+# }
 
 
