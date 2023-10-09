@@ -5,3 +5,7 @@ variable "sub-id" {
 variable "endpoint-security-group" {
   type = any
 }
+
+variable "vpc-endpoint-name" {
+  type = string
+}

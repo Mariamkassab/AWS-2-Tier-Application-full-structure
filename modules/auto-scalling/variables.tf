@@ -54,3 +54,6 @@ variable "name-prefix" {
 variable "ec2-name" {
   type = string
 }
+variable "secretmanget_rds_secret_retrieve" {
+  type = any
+}

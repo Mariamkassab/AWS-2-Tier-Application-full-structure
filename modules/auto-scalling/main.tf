@@ -18,14 +18,30 @@ resource "aws_iam_role" "rds_auth_role" {
 EOF
 }
 
+resource "aws_iam_role_policy" "secretmanager_policy" {
+  name = "secretmanager_policy"
+  role = "${aws_iam_role.rds_auth_role.name}"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Effect": "Allow",
+        "Action": "secretsmanager:GetSecretValue",
+        "Resource": "${var.secretmanget_rds_secret_retrieve}"
+    }]
+}
+EOF
+}    
+
 resource "aws_iam_role_policy_attachment" "attach_rds_role_policy" {
   role       = aws_iam_role.rds_auth_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"  #should be changed to the least permissions
 }
 
 resource "aws_iam_role_policy_attachment" "attach_cw_role_policy" {
   role       = aws_iam_role.rds_auth_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
  resource "aws_iam_instance_profile" "ec2-access-rds" {

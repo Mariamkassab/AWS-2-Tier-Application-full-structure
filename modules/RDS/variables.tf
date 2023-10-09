@@ -56,3 +56,11 @@ variable "backup_window" {
 variable "backup_retention_period" {
   type = any
 }
+
+variable "secret-name" {
+  type = string
+}
+
+variable "rds-enhanced-monitoring-role" {
+  type = string
+}

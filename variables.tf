@@ -169,8 +169,33 @@ variable "backup_window" {
 variable "backup_retention_period" {
   type = any
 }
+variable "secret-name" {
+  type = string
+}
+variable "rds-enhanced-monitoring-role" {
+  type = string
+}
 
 
+#waf
+variable "waf-name" {
+  type = string
+}
+variable "waf-log-group-name" {
+  type = string
+}
+
+
+#vpc endpoint connect
+variable "vpc-endpoint-name" {
+  type = string
+}
+
+
+#cloudtrail
+variable "trail-bucket-name" {
+  type = string
+}
 
 
 

@@ -4,10 +4,11 @@ resource "aws_cloudtrail" "example" {
   s3_bucket_name                = aws_s3_bucket.example.id
   s3_key_prefix                 = "prefix"
   include_global_service_events = true
+  depends_on = [ aws_s3_bucket_policy.example ]
 }
 
 resource "aws_s3_bucket" "example" {
-  bucket        = "cloudtrail-s3-bucket-for-zain"
+  bucket        = var.trail-bucket-name 
   force_destroy = true
 }
 

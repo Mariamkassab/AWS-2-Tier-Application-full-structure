@@ -1,31 +1,22 @@
-# resource "random_password" "master"{
-#   length           = 16
-#   special          = true
-#   override_special = "_!%^"
-# }
+resource "random_password" "master"{
+  length           = 16
+  special          = true
+  override_special = "_!%^"
+}
 
-# resource "aws_secretsmanager_secret" "rds-password" {
-#   name = "db-password"
-#   recovery_window_in_days = 0
-# }
+resource "aws_secretsmanager_secret" "rds-password" {
+  name = var.secret-name 
+  recovery_window_in_days = 0
+}
 
-# resource "aws_secretsmanager_secret_version" "password" {
-#   secret_id = aws_secretsmanager_secret.rds-password.id
-#   secret_string = random_password.master.result
-# }
-
-# data "aws_secretsmanager_secret" "secretmasterDB" {
-#   arn = aws_secretsmanager_secret.secretmasterDB.arn
-# }
-  
-# data "aws_secretsmanager_secret_version" "creds" {
-#   secret_id = data.aws_secretsmanager_secret.secretmasterDB.arn
-# }
-
+resource "aws_secretsmanager_secret_version" "password" {
+  secret_id = aws_secretsmanager_secret.rds-password.id
+  secret_string = random_password.master.result
+}
 
 
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  name_prefix        = "rds-enhanced-monitoring-"
+  name_prefix        = var.rds-enhanced-monitoring-role #"rds-monitoring-in-enhanced-details"
   assume_role_policy = data.aws_iam_policy_document.rds_enhanced_monitoring.json
 }
 
@@ -64,11 +55,11 @@ resource "aws_db_instance" "mysql-rds" {
   engine               = var.engine-name 
   identifier           = var.db-name 
   allocated_storage    =  var.storage 
-  #max_allocated_storage = var.max_allocated_storage-autoscalling #100  # this is for rds autoscaling   
+  #max_allocated_storage = var.max_allocated_storage-autoscalling #100  #this is for rds autoscaling   
   engine_version       = var.engine-v 
   instance_class       = var.instance-type 
   username             = var.user 
-  password             = var.pass #aws_secretsmanager_secret_version.password.secret_string 
+  password             = aws_secretsmanager_secret_version.password.secret_string  #var.pass
   vpc_security_group_ids = [var.db-security-group] 
   skip_final_snapshot  = var.skip-final-db-snapshot 
   publicly_accessible =  false

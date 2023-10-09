@@ -1,9 +1,9 @@
 resource "aws_wafv2_web_acl" "WafWebAcl" {
-  name  = "wafv2-web-acl"
+  name  = var.waf-name 
   scope = "REGIONAL"
 
   default_action {
-    allow {   # will allow all the requests except the rules mentioned below
+    allow {   # will allow all the requests upon the rules mentioned below
     }
   }
 
@@ -187,7 +187,7 @@ resource "aws_wafv2_web_acl" "WafWebAcl" {
 }
 
 resource "aws_cloudwatch_log_group" "WafWebAclLoggroup" {
-  name              = "aws-waf-logs-wafv2-web-acl"
+  name              = var.waf-log-group-name 
   retention_in_days = 30
 }
 

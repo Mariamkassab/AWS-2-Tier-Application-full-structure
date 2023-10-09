@@ -65,4 +65,15 @@ monitoring_interval = 30
 maintenance_window = "Mon:00:00-Mon:03:00"
 backup_window = "03:00-06:00"
 backup_retention_period = 0
+secret-name = "db-password-axir"
+rds-enhanced-monitoring-role = "rds-monitoring-in-enhanced-details"
 
+#waf
+waf-name = "wafv2-web-acl" 
+waf-log-group-name = "aws-waf-logs-wafv2-web-acl"
+
+#vpc endpoint connect
+vpc-endpoint-name = "connect"
+
+#cloudtrail
+trail-bucket-name = "cloudtrail-s3-bucket-for-zain"
