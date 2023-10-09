@@ -51,3 +51,6 @@ variable "target-group" {
 variable "name-prefix" {
   type = string
 }
+variable "ec2-name" {
+  type = string
+}

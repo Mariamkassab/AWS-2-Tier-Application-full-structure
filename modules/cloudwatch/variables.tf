@@ -1,7 +1,7 @@
-variable "sns_topic_arn" {
-  type = string
+variable "auto-scaling" {
+  type = any
 }
 
-variable "aws_instance_id" {
+variable "cpu-threshold" {
   type = string
 }

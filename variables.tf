@@ -103,6 +103,9 @@ variable "grace-period" {
 variable "desired-no" {
   type = any
 }
+variable "ec2-name" {
+  type = string
+}
 
 
 

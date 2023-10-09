@@ -7,13 +7,9 @@ resource "aws_cloudwatch_metric_alarm" "app1_asg_cwa_cpu" {
   namespace           = "AWS/EC2"
   period              = "120"
   statistic           = "Average"
-  threshold           = "80"
+  threshold           = var.cpu-threshold #"60"
 
   dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.my_asg.name 
+    AutoScalingGroupName = var.auto-scaling 
   }
-}
-
-resource "aws_cloudwatch_log_group" "ec2_log_group" {
-  name = "ec2_log_group"
 }

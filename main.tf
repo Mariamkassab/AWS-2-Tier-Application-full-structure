@@ -65,9 +65,9 @@ module "rds_security_group" {
   }
 
   egress_rules = {
-    port        = 3306
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24", "10.0.1.0/24"]
+    port        = 0
+    protocol    = ""
+    cidr_blocks = []
   }
 
   sc_g_name = "rds_security_group"
@@ -147,7 +147,7 @@ module "auto_scaling_group" {
   grace-period = var.grace-period
   desired-no = var.desired-no
   target-group = "${module.lbs_creation.lb_target_group_arn}"
-
+  ec2-name = var.ec2-name
 }
 
 

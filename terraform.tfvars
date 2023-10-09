@@ -43,6 +43,7 @@ max-size = 3
 min-size = 1
 grace-period = 300
 desired-no = 1
+ec2-name = "axir-project"
 
 #mysql-rds
 engine-name = "mysql"

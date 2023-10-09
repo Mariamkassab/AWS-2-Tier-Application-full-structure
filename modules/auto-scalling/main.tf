@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "attach_rds_role_policy" {
 
 resource "aws_iam_role_policy_attachment" "attach_cw_role_policy" {
   role       = aws_iam_role.rds_auth_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
 }
 
  resource "aws_iam_instance_profile" "ec2-access-rds" {
@@ -36,7 +36,6 @@ resource "aws_iam_role_policy_attachment" "attach_cw_role_policy" {
 
 resource "aws_launch_template" "lanuch-temp" {
   name = var.lanch-temp-name 
-  #name_prefix = var.name-prefix 
   image_id = var.image-id
   instance_type = var.ec2-type 
   key_name = var.key-name 
@@ -47,10 +46,7 @@ resource "aws_launch_template" "lanuch-temp" {
     #name = aws_iam_instance_profile.ec2-access-rds.name
     arn = aws_iam_instance_profile.ec2-access-rds.arn
   }
-  # provisioner "file" {
-  #   source      = "./modules/config.json"
-  #   destination = "/opt/aws/amazon-cloudwatch-agent/bin/config.json"
-  # }
+  
   vpc_security_group_ids = [var.security-group]
   user_data = filebase64 (var.user-data)
 }
@@ -70,7 +66,11 @@ resource "aws_autoscaling_group" "ASG" {
     version = "$Latest"
   }
   target_group_arns         = [var.target-group]
-
+  tag {
+      key                 = "Name"
+      value               = var.ec2-name
+      propagate_at_launch = true
+    }
 }
 
 resource "aws_autoscaling_policy" "asg-policy" {

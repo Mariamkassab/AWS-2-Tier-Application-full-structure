@@ -1,13 +1,13 @@
 
 resource "aws_cloudtrail" "example" {
-  name                          = "example"
+  name                          = "account-auditing-axir"
   s3_bucket_name                = aws_s3_bucket.example.id
   s3_key_prefix                 = "prefix"
-  include_global_service_events = false
+  include_global_service_events = true
 }
 
 resource "aws_s3_bucket" "example" {
-  bucket        = "cloudtrail-s3-bucket-for-axir"
+  bucket        = "cloudtrail-s3-bucket-for-zain"
   force_destroy = true
 }
 
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "example" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/example"]
+      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/account-auditing-axir"]
     }
   }
 
@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "example" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/example"]
+      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/account-auditing-axir"]
     }
   }
 }
