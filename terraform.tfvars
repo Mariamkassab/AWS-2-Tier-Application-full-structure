@@ -14,6 +14,13 @@ subnet_name    = ["pub_sub1_az1", "private_sub1_az1", "private_sub2_az2", "pub_s
 # nat
 nat_name         = "nat_gateway"
 
+# ec2 security group
+ec2-ssh-cidr = ["10.0.2.0/24", "10.0.1.0/24"] 
+ec2-rds-cidr = ["10.0.1.0/24", "10.0.2.0/24"]
+
+#lb ce\security group
+lb-ec2-cidr = ["10.0.2.0/24" , "10.0.1.0/24"]
+
 # route tables 
 pub-wanted-cidr = "0.0.0.0/0"
 pub-table-name = "public_rt"
@@ -49,12 +56,14 @@ ec2-name = "axir-project"
 engine-name = "mysql"
 db-name = "my-rds"
 storage = 5
+max_allocated_storage-autoscalling = 10
 engine-v = "5.7" # the new verion 
 instance-type = "db.t2.micro"
 user = "myrdsuser"
 pass = "myrdspassword"
 skip-final-db-snapshot = true  #should be false
-
-# cloud trail
-include_global_service_events = true 
+monitoring_interval = 30
+maintenance_window = "Mon:00:00-Mon:03:00"
+backup_window = "03:00-06:00"
+backup_retention_period = 0
 

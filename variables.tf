@@ -1,12 +1,14 @@
+
+# provider
 variable "aws-region" {
   type = string
 }
 
 
+#vpc
 variable "vpc_name" {
   type = string
 }
-
 variable "vpc_cidr" {
   type = string
 }
@@ -15,6 +17,7 @@ variable "gw_name" {
 }
 
 
+#subnets
 variable "subnet_cidr" {
     type = list  
 }
@@ -24,11 +27,30 @@ variable "subnet_name" {
 variable "az" {
   type = list
 }
+
+
+#nat
 variable "nat_name" {
   type = string
 }
 
 
+# ec2 security group
+variable "ec2-ssh-cidr" {
+  type = list
+}
+variable "ec2-rds-cidr" {
+  type = list
+}
+
+
+# lb security groupe
+variable "lb-ec2-cidr" {
+  type = list
+}
+
+
+#public rt
 variable "pub-wanted-cidr" {
   type = string
 }
@@ -36,6 +58,7 @@ variable "pub-table-name" {
   type = string
 }
 
+#private rt
 variable "pri-wanted-cidr" {
   type = string
 }
@@ -44,6 +67,7 @@ variable "pri-table-name" {
 }
 
 
+#loadbalancer
 variable "lb_name" {
   type = string
 }
@@ -70,6 +94,7 @@ variable "default_action_type" {
 }
 
 
+# autoscalling group
 variable "lanch-temp-name" {
   type = string
 }
@@ -109,6 +134,7 @@ variable "ec2-name" {
 
 
 
+# rds
 variable "engine-name" {
   type = string
 }
@@ -133,12 +159,23 @@ variable "pass" {
 variable "skip-final-db-snapshot" {
   type = bool
 }
-
-
-
-variable "include_global_service_events" {
-  type = bool
+variable "max_allocated_storage-autoscalling" {
+  type = any
 }
+variable "monitoring_interval" {
+  type = any
+}
+variable "maintenance_window" {
+  type = any
+}
+variable "backup_window" {
+  type = any
+}
+variable "backup_retention_period" {
+  type = any
+}
+
+
 
 
 

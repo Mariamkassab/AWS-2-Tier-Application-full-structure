@@ -27,24 +27,30 @@ module "ec2_security_group" {
     ssh = {
       port        = 22
       protocol    = "tcp"
-      cidr_blocks = ["10.0.2.0/24", "10.0.1.0/24"] 
-    },
-    rds = {
-      port        = 3306
-      protocol    = "tcp"
-      cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24"] # rds
+      cidr_blocks = var.ec2-ssh-cidr 
+      security_group = []
     },
     lb = {
       port        = 80
       protocol    = "tcp"
-      cidr_blocks = ["10.0.0.0/24" , "10.0.3.0/24"] # lb
+      cidr_blocks = [] 
+      security_group = [module.lb_security_group.sg_id]
     }
   }
 
   egress_rules = { 
-    port        = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    rds = {
+      port        = 3306
+      protocol    = "tcp"
+      cidr_blocks = var.ec2-rds-cidr  
+      security_group = []
+    },
+    lb = {
+      port        = 80
+      protocol    = "tcp"
+      cidr_blocks = [] 
+      security_group = [module.lb_security_group.sg_id]
+    }
   }
 
   sc_g_name = "ec2_security_group"
@@ -60,14 +66,19 @@ module "rds_security_group" {
     ec2 = {
       port        = 3306
       protocol    = "tcp"
-      cidr_blocks = ["10.0.2.0/24", "10.0.1.0/24"] 
+      cidr_blocks = []
+      security_group = [module.ec2_security_group.sg_id] 
     }
   }
 
   egress_rules = {
-    port        = 0
-    protocol    = ""
-    cidr_blocks = []
+      no-rules = {
+      port        = 0
+      protocol    = ""
+      cidr_blocks = []
+      security_group = []
+
+    }
   }
 
   sc_g_name = "rds_security_group"
@@ -81,14 +92,18 @@ module "lb_security_group" {
     html = {
       port        = 80
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"] # shoud make the ec2
+      cidr_blocks = ["0.0.0.0/0"] 
+      security_group = []
     }
   }
 
   egress_rules = {
-    port        = 80
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24" , "10.0.1.0/24"]   #########
+    ec2 = {
+      port        = 80
+      protocol    = "tcp"
+      cidr_blocks = var.lb-ec2-cidr 
+      security_group = []
+    }
   }
 
   sc_g_name = "lb_security_group"
@@ -163,6 +178,11 @@ module "mysql-rds" {
   subnet-vpc-id = [ module.terraform_subnet.second_pri_id , module.terraform_subnet.first_pri_id ]
   skip-final-db-snapshot = var.skip-final-db-snapshot
   db-security-group = module.rds_security_group.sg_id
+  max_allocated_storage-autoscalling = var.max_allocated_storage-autoscalling
+  monitoring_interval = var.monitoring_interval
+ maintenance_window = var.maintenance_window 
+ backup_window = var.backup_window
+ backup_retention_period = var.backup_retention_period
 }
 
 module "WAF" {
@@ -181,7 +201,6 @@ module "WAF" {
 
 module "cloudtrail-logs" {
   source = "./modules/cloudtrail"
-  include_global_service_events = var.include_global_service_events
 }
 
 

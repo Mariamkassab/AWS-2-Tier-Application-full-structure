@@ -36,3 +36,23 @@ variable "skip-final-db-snapshot" {
 variable "db-security-group" {
   type = any
 }
+
+variable "max_allocated_storage-autoscalling" {
+  type = any
+}
+
+variable "monitoring_interval" {
+  type = any
+}
+
+variable "maintenance_window" {
+  type = any
+}
+
+variable "backup_window" {
+  type = any
+}
+
+variable "backup_retention_period" {
+  type = any
+}

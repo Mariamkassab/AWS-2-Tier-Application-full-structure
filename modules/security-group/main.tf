@@ -8,26 +8,19 @@ resource "aws_security_group" "security_group" {
       to_port     = ingress.value.port
       protocol    = ingress.value.protocol
       cidr_blocks = ingress.value.cidr_blocks
-      #security_groups = ingress.value.security_group #[]
+      security_groups = ingress.value.security_group 
     }
   }
-#  dynamic "egress" {
-#     for_each = var.egress_rules
-#     content {
-#       from_port   = egress.value.port
-#       to_port     = egress.value.port
-#       protocol    = egress.value.protocol
-#       cidr_blocks = egress.value.cidr_blocks
-#       #security_groups = egress.value.security_group #[]
-#     }
-#   }
-  egress {
-    from_port   = var.egress_rules.port
-    to_port     = var.egress_rules.port
-    protocol    = var.egress_rules.protocol
-    cidr_blocks = var.egress_rules.cidr_blocks
+ dynamic "egress" {
+    for_each = var.egress_rules
+    content {
+      from_port   = egress.value.port
+      to_port     = egress.value.port
+      protocol    = egress.value.protocol
+      cidr_blocks = egress.value.cidr_blocks
+      security_groups = egress.value.security_group 
+    }
   }
-
   tags = {
     Name = var.sc_g_name
   }

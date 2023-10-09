@@ -7,15 +7,17 @@ variable "ingress_rules" {
     port         = number
     protocol     = string
     cidr_blocks  = list(string)
+    security_group = list(any)
   }))
 }
 
 variable "egress_rules" {
-  type = object({
+  type = map(object({
     port         = number
     protocol     = string
     cidr_blocks  = list(string)
-  })
+    security_group = list(any)
+  }))
 }
 
 variable "sc_g_name" {
