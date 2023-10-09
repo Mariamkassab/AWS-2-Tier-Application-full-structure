@@ -209,12 +209,12 @@ module "mysql-rds" {
   rds-enhanced-monitoring-role = var.rds-enhanced-monitoring-role
 }
 
-# module "WAF" {
-#   source = "./modules/waf"
-#   aws_lb_arn = module.lbs_creation.lb_arn
-#   waf-name = var.waf-name
-#   waf-log-group-name = var.waf-log-group-name
-# }
+module "WAF" {
+  source = "./modules/waf"
+  aws_lb_arn = module.lbs_creation.lb_arn
+  waf-name = var.waf-name
+  waf-log-group-name = var.waf-log-group-name
+}
 
 module "ec2-endpoint-az1" {
   source = "./modules/ec2_endpoint"
@@ -229,10 +229,10 @@ module "ec2-endpoint-az1" {
 #   vpc-endpoint-name = var.vpc-endpoint-name   
 # }
 
-# module "cloudtrail-logs" {
-#   source = "./modules/cloudtrail"
-#   trail-bucket-name = var.trail-bucket-name 
-# }
+module "cloudtrail-logs" {
+  source = "./modules/cloudtrail"
+  trail-bucket-name = var.trail-bucket-name 
+}
 
 module "cicd-user-with-policy" {
   source = "./modules/cicd-user"
