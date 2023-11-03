@@ -27,12 +27,12 @@ resource "aws_dynamodb_table" "terraform-lockstate" {
 }
 
 
-terraform {
-  backend "s3" {
-    bucket         = "terraform-statefile-mariam"
-    key            = "terraform.tfstate"
-    region         = "eu-west-1"
-    dynamodb_table = "terraform-lockstate"
-    encrypt        = "true"
-  }
-}
+# terraform {
+#   backend "s3" {
+#     bucket         = "terraform-statefile-mariam"
+#     key            = "terraform.tfstate"
+#     region         = "eu-west-1"
+#     dynamodb_table = "terraform-lockstate"
+#     encrypt        = "true"
+#   }
+# }
