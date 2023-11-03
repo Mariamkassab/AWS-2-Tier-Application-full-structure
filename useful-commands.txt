@@ -5,5 +5,4 @@ chmod 400
 ssh -i ec2-key.pem ubuntu@i-061b8b4224461c8ba   -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id i-061b8b4224461c8ba'
 
 
-aws secretsmanager --output text get-secret-value --secret-id prod/lti/token --query SecretString --region us-west-2
-
+aws secretsmanager --output text get-secret-value --secret-id db-password-axir --query SecretString --region us-east-1

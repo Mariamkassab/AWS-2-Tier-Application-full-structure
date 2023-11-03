@@ -197,7 +197,7 @@ module "mysql-rds" {
   instance-type = var.instance-type
   user = var.user
   pass = var.pass 
-  subnet-vpc-id = [ module.terraform_subnet.second_pri_id , module.terraform_subnet.first_pri_id ]
+  subnet-vpc-id = [ module.terraform_subnet.third_pri_id , module.terraform_subnet.forth_pri_id ]
   skip-final-db-snapshot = var.skip-final-db-snapshot
   db-security-group = module.rds_security_group.sg_id
   max_allocated_storage-autoscalling = var.max_allocated_storage-autoscalling
@@ -232,8 +232,4 @@ module "ec2-endpoint-az1" {
 module "cloudtrail-logs" {
   source = "./modules/cloudtrail"
   trail-bucket-name = var.trail-bucket-name 
-}
-
-module "cicd-user-with-policy" {
-  source = "./modules/cicd-user"
 }
